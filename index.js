@@ -53,11 +53,10 @@ const unknownEndpoint = (request, response) => {
 app.get('/api/favourites', (request, response) => {
 
   async function getMovieInfo(movieName, id) {
-    console.log('id', id)
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    page.on('console', msg => console.log('Browser console:', msg.text()));
+    // page.on('console', msg => console.log('Browser console:', msg.text()));
 
     await page.goto(`https://www.google.com/search?q=${encodeURIComponent(movieName)}`);
   
@@ -104,7 +103,7 @@ app.get('/api/favourites', (request, response) => {
 
     await page2.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
 
-    page2.on('console', msg => console.log('Browser console:', msg.text()));
+    // page2.on('console', msg => console.log('Browser console:', msg.text()));
 
     const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(movieName + ' movie poster')}&tbm=isch`;
     
