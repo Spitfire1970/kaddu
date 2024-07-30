@@ -12,9 +12,19 @@ let images = [
   ]
 
 let todos = [
-    {id: 1, task: 'learn how to drive', status: 'i', created: '3:44:52pm 26/07/24'},
-    {id: 2, task: 'finalize FYP', status: 'i', created: '3:44:52pm 26/07/24'},
-    {id: 3, task: 'make voter id', status: 'c', created: '3:44:52pm 26/07/24'}
+    {id: 1, task: 'learn how to drive', status: 'i', created: '27/07/2024 22:56:37'},
+    {id: 2, task: 'finalize FYP', status: 'i', created: '27/07/2024 22:56:37'},
+    {id: 3, task: 'IIIT internship', status: 'i', created: '27/07/2024 22:56:37'},
+    {id: 4, task: 'close tabs', status: 'i', created: '27/07/2024 22:56:37'}
 ]
 
-module.exports = {images, todos}
+let favourites = [
+    {name: 'blue eye samurai'},
+    {name: 'avatar the last airbender'},
+    {name: 'zindagi na milegi dobara'},
+    {name: 'interstellar'},
+    {name: 'piku'},
+    {name: 'jojo rabbit'}
+]
+
+module.exports = {images, todos, favourites}
