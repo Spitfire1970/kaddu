@@ -1,7 +1,9 @@
 const express = require('express');
-const app = express();
-const puppeteer = require('puppeteer');
 const mongoose = require('mongoose');
+const app = express();
+
+const puppeteer = require('puppeteer');
+
 const multer = require('multer');
 const path = require('path');
 
@@ -10,7 +12,7 @@ const Todo = require('./models/todo');
 const Favourite = require('./models/favourite');
 const Quote = require('./models/quote');
 const Blog = require('./models/blog')
-const fs = require('fs');
+const Log = require('./models/log')
 
 require('dotenv').config();
 
@@ -57,6 +59,16 @@ app.get('/api/favourites', async (request, response) => {
   }
 });
 
+app.get('/api/logs', async (request, response) => {
+  try {
+    const logs = await Log.find({});
+    response.json(logs);
+  } catch (error) {
+    console.error('Error fetching logs:', error);
+    response.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.get('/api/gallery', async (request, response) => {
   try {
     const images = await Image.find({});
@@ -93,6 +105,16 @@ app.get('/api/blogs', async (request, response) => {
     response.json(blogs);
   } catch (error) {
     console.error('Error fetching blogs:', error);
+    response.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/api/logs', async (request, response) => {
+  try {
+    const images = await Image.find({});
+    response.json(images);
+  } catch (error) {
+    console.error('Error fetching images:', error);
     response.status(500).json({ error: 'Internal server error' });
   }
 });
