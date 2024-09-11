@@ -41,8 +41,10 @@ app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
 
+// ALL CLIENT SIDE ROUTING IS BEING HANDLED BY THIS UNKNOWN ENDPOINT MIDDLEWARE LOL
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' });
+  // response.status(404).send({ error: 'unknown endpoint' });
+  response.sendFile(path.join(__dirname, 'dist', 'index.html'));
 };
 
 app.get('/api/', (request, response) => {
