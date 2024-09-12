@@ -13,6 +13,7 @@ const Favourite = require('./models/favourite');
 const Quote = require('./models/quote');
 const Blog = require('./models/blog')
 const Log = require('./models/log')
+const fs = require('fs');
 
 require('dotenv').config();
 
@@ -292,8 +293,28 @@ app.listen(PORT, () => {
 });
 
 async function getMovieInfo(movieName) {
+  const possibleChromePaths = [
+    process.env.CHROME_BIN,
+    '/usr/bin/google-chrome',
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/chromium'
+  ];
+
+  let executablePath;
+  for (const path of possibleChromePaths) {
+    if (path && fs.existsSync(path)) {
+      executablePath = path;
+      break;
+    }
+  }
+
+  if (!executablePath) {
+    throw new Error('Chrome executable not found. Please ensure Chrome is installed.');
+  }
+
   const browser = await puppeteer.launch({
-    executablePath: process.env.CHROME_BIN || '/usr/bin/google-chrome',
+    executablePath,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
     const page = await browser.newPage();

@@ -2,7 +2,9 @@ services:
   - type: web
     name: kaddu-lol-backend
     env: node
-    buildCommand: npm install
+    buildCommand: |
+      npm install
+      google-chrome --version || echo "Chrome is not installed"
     startCommand: npm start
     envVars:
       - key: CHROME_BIN
