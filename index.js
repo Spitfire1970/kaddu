@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 
 const multer = require('multer');
 const path = require('path');
@@ -292,7 +292,10 @@ app.listen(PORT, () => {
 });
 
 async function getMovieInfo(movieName) {
-    const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    executablePath: process.env.CHROME_BIN || '/usr/bin/google-chrome',
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
     const page = await browser.newPage();
 
     // page.on('console', msg => console.log('Browser console:', msg.text()));
