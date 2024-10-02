@@ -170,6 +170,29 @@ app.post('/api/blogs', async (request, response) => {
   }
 });
 
+app.post('/api/goodstuff', async (request, response) => {
+  const body = request.body;
+
+  if (!body.text) {
+    return response.status(400).json({ 
+      error: 'quote missing' 
+    });
+  }
+
+  const quote = new Quote({
+    text: body.text,
+    vid: body.vid
+  });
+
+  try {
+    const savedQuote = await quote.save();
+    response.json(savedQuote);
+  } catch (error) {
+    console.error('Error saving quote:', error);
+    response.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.post('/api/favourites', async (request, response) => {
     const body = request.body;
   
