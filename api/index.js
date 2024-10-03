@@ -7,12 +7,12 @@ const puppeteer = require('puppeteer');
 const multer = require('multer');
 const path = require('path');
 
-const Image = require('./models/image');
-const Todo = require('./models/todo');
-const Favourite = require('./models/favourite');
-const Quote = require('./models/quote');
-const Blog = require('./models/blog')
-const Log = require('./models/log')
+const Image = require('../models/image');
+const Todo = require('../models/todo');
+const Favourite = require('../models/favourite');
+const Quote = require('../models/quote');
+const Blog = require('../models/blog')
+const Log = require('../models/log')
 
 require('dotenv').config();
 
