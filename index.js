@@ -203,16 +203,20 @@ app.post('/api/favourites', async (request, response) => {
     }
 
     const favouriteObject = await getMovieInfo(body.title);
-  
-    const favourite = new Favourite(favouriteObject);
-  
-    try {
-      const savedFavourite = await favourite.save();
-      console.log(savedFavourite)
-      response.json(savedFavourite);
-    } catch (error) {
-      console.error('Error saving favourite:', error);
-      response.status(500).json({ error: 'Internal server error' });
+    if (Object.keys(favouriteObject).length !== 0) {
+      const favourite = new Favourite(favouriteObject);
+      try {
+        const savedFavourite = await favourite.save();
+        console.log(savedFavourite)
+        response.json(savedFavourite);
+      } catch (error) {
+        console.error('Error saving favourite:', error);
+        response.status(500).json({ error: 'Internal server error' });
+      }
+    }
+
+    else {
+      response.json(null);
     }
   });
 
@@ -318,10 +322,10 @@ async function getMovieInfo(movieName) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    // page.on('console', msg => console.log('Browser console:', msg.text()));
+    // uncomment below line to do debugging
+    // page.on('console', msg => console.log('Browser console:', msg.text())); 
 
     await page.goto(`https://www.google.com/search?q=${encodeURIComponent(movieName)}`);
-  
     const movieInfo = await page.evaluate(() => {
       let element = document.querySelector('.PZPZlf.ssJ7i');
       const title = element ? element.textContent.trim() : 'N/A';
@@ -342,7 +346,7 @@ async function getMovieInfo(movieName) {
 
       element = document.querySelectorAll('.iAIpCb.PZPZlf span');
 
-      const deets = element ? element[element.length-1].textContent.trim() : null;
+      const deets = element.length > 0 ? element[element.length-1].textContent.trim() : null;
       let year = 'N/A'
       let genre = 'N/A'
       let runtime = 'N/A'
@@ -354,8 +358,7 @@ async function getMovieInfo(movieName) {
         runtime = all_deets[2]
       }
 
-      imdb_url = document.querySelector('.TZahnb.vIUFYd').getAttribute("href");
-  
+      imdb_url = document.querySelector('.TZahnb.vIUFYd')?.getAttribute("href");
       return {
         title: title,
         year: year,
@@ -380,23 +383,22 @@ async function getMovieInfo(movieName) {
     const imageSrc = await page2.evaluate((movieName) => {
       const temp = document.querySelector('.rg_i.Q4LuWd');
       if (temp && (temp.width > 100 || temp.height > 100)) {
-        console.log('entered here 1', temp, temp.height, temp.width);
       return temp.src}
       const images = Array.from(document.querySelectorAll('img'));
       for (let img of images) {
         if (img.width < 100 || img.height < 100) continue;
-        console.log('entered here 2', img, img.height, img.width);
         const altText = img.alt.toLowerCase();
         const parentText = img.parentElement.textContent.toLowerCase();
         if (altText.includes(movieName.toLowerCase()) || parentText.includes(movieName.toLowerCase())) {
-          console.log('src', img.src)
-          console.log('data src', img.getAttribute('data-src'))
-          console.log('data url', img.getAttribute('data-iurl'))
           return img.src || img.getAttribute('data-src') || img.getAttribute('data-iurl');
         }
       }
       return null;
     }, movieName);
+
+    if (!movieInfo.genre || movieInfo.genre == 'N/A' || !movieInfo.year || movieInfo.year == 'N/A') {
+      return ({})
+    }
 
     await browser.close();
     return {...movieInfo, image_src:imageSrc};
